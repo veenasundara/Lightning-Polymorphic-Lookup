@@ -1,0 +1,7 @@
+<!-- Event: 		EvtChildComponentError -->
+<!-- Created by: 	OpFocus(Veena Sundara-Heragu) on 06/08/2016 -->
+<!-- Description: 	Event child component to indicate an error -->
+<aura:event type="COMPONENT">
+    <!-- the error message from the child component that will be displayed in the parent component -->
+    <aura:attribute name="message" type="String"/> <!-- error message to diaplay on page -->
+</aura:event>

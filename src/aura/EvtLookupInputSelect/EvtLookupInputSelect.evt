@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="Item selected for lookup">
+    <aura:attribute name="record" type="String[]"/>
+</aura:event>

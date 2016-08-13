@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="Type of a polymorphic lookup selected">
+    <aura:attribute name="type" type="String" />
+    <aura:attribute name="iconType" type="String" />
+    <aura:attribute name="iconName" type="String" />
+</aura:event>

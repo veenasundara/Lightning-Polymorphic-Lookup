@@ -1,0 +1,24 @@
+<aura:component >
+    <aura:attribute name="item" type="Object" access="GLOBAL"/>
+    
+    <aura:registerEvent name="EvtPolymorphLookupTypeSelect" type="c:EvtPolymorphLookupTypeSelect"/>
+    
+    <li class="slds-dropdown__item" onclick="{!c.selectItem}">
+        <a href="#" role="menuitemradio" >
+            <p class="slds-truncate">
+                <span class="{!'slds-icon_container slds-icon-' + 
+                                v.item.iconType + '-' + 
+                                v.item.iconName}"
+                      title="{!v.selectedMenuType}">
+                    <c:svgIcon svgPath="{!'/resource/SLDS104/assets/icons/' +
+                                        v.item.iconType + '-sprite/svg/symbols.svg#' + 
+                                        v.item.iconName}" 
+                               class="slds-icon--small"/>  
+                </span>
+
+                &nbsp; {!v.item.type}
+            </p>
+        </a>
+    </li>
+
+</aura:component>

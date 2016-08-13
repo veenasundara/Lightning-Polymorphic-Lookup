@@ -1,0 +1,9 @@
+<aura:component >
+    <aura:attribute name="type" type="String" required="true" description="The type of object being searched"/>      
+    <aura:attribute name="icon" type="Aura.Component" description="The icon to display before the text"/>      
+    <aura:attribute name="allRecords" type="Object[]" description="all records to use for the lookup"/>      
+    <aura:attribute name="fetchRecordsMethod" type="Aura.Action" description="method to get records" />
+    <aura:attribute name="iconType" type="String" required="true" description="standard, utility, etc."/>      
+    <aura:attribute name="iconName" type="String" required="true" description="user, search, down, etc."/>      
+       
+</aura:component>

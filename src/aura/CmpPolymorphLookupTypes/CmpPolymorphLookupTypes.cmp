@@ -1,0 +1,52 @@
+<aura:component >
+    <aura:attribute name="items" type="Object[]" default="[]" access="GLOBAL" description="The menu items."/>
+    <aura:attribute name="itemsPopulated" type="Boolean" access="GLOBAL" />
+    <aura:attribute name="showIconOnly" type="Boolean" access="GLOBAL" default="false" />
+    <aura:attribute name="selectedMenuType" type="String"/>      
+    <aura:attribute name="selectedMenuIconType" type="String"/>      
+    <aura:attribute name="selectedMenuIconName" type="String"/>      
+
+
+    <aura:attribute name="outerDivClass" type="string" access="private"
+                    default="slds-picklist slds-dropdown-trigger slds-dropdown-trigger--click"/>
+    <aura:attribute name="ulClass" type="string" access="private"/>
+
+    
+    <aura:handler name="change" value="{!v.itemsPopulated}" action="{!c.doInitClasses}"/>
+    <aura:handler name="EvtPolymorphLookupTypeSelect" event="c:EvtPolymorphLookupTypeSelect" 
+                  action="{!c.selectMenuType}" />
+
+    <aura:if isTrue="{!v.itemsPopulated}" >
+    <div class="{!v.outerDivClass}">
+        <button id="menuButton" class="slds-button slds-button__icon--left" 
+                aria-haspopup="true" 
+                aria-activedescendant="" onclick="{!c.toggleTypeDropdown}">
+            <span class="{!'slds-icon_container slds-icon-' + 
+                            v.selectedMenuIconType + '-' + 
+                            v.selectedMenuIconName}"
+                  title="{!v.selectedMenuType}">
+                <c:svgIcon svgPath="{!'/resource/SLDS104/assets/icons/' +
+                                    v.selectedMenuIconType + '-sprite/svg/symbols.svg#' + 
+                                    v.selectedMenuIconName}" 
+                           class="slds-icon--small"/>  
+            </span>
+            <aura:if isTrue="{!v.showIconOnly == false}" >
+            	<span class="slds-m-left--x-small slds-m-right--x-small">{!v.selectedMenuType}</span>
+            </aura:if>
+            <span class="slds-icon_container slds-icon-utility-down">
+                <c:svgIcon svgPath="/resource/SLDS104/assets/icons/utility-sprite/svg/symbols.svg#down"
+                           class="slds-icon--x-small"/>  
+            </span>
+        </button>
+        <div class="slds-dropdown slds-dropdown--left slds-dropdown--menu">
+            <ul class="{!v.ulClass}" role="menu"
+                aria-labelledby="menuButton">
+                <aura:iteration items="{!v.items}" var="item">
+                    <c:CmpPolymorphLookupTypesItem item="{!item}" />
+                </aura:iteration>
+            </ul>
+        </div>
+    </div>
+	</aura:if>
+        
+</aura:component>

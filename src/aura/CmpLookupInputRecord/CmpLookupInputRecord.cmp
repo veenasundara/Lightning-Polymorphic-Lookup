@@ -1,0 +1,15 @@
+<aura:component >
+	<aura:attribute name="record" type="String[]"/>
+
+    <aura:registerEvent name="EvtLookupInputSelect" type="c:EvtLookupInputSelect"/>
+
+    <li class="slds-dropdown__item">
+        <a class="slds-lookup__item-action" href="#" role="menuitemradio"
+           onclick="{!c.chooseItem}">
+            <div class="slds-lookup__result-text">
+              {!v.record[1]}
+            </div>
+        </a>
+     </li>    
+	
+</aura:component>

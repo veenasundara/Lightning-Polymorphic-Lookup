@@ -1,0 +1,126 @@
+<aura:component >
+
+    <aura:attribute name="lookupLabel" type="String" access="GLOBAL" description="label to place above lookup"/>
+    <aura:attribute name="showIconOnly" type="Boolean" access="GLOBAL" default="false" />
+    <aura:attribute name="selectedId" type="String" description="matched Id"/>      
+    <aura:attribute name="selectedName" type="String" description="matched Label"/>        
+    <aura:attribute name="selectedMenuType" type="String" />      
+
+
+    <aura:attribute name="items" type="Object[]" access="private" description="The menu items."/>
+    <aura:attribute name="mapRecordsByType" type="Object" access="private" description="The menu items."/>
+    <aura:attribute name="selectedMenuIcon" type="Aura.Component" access="private"/>      
+    <aura:attribute name="itemsPopulated" type="Boolean" access="private" default="false" />
+
+    <!-- all available records -->
+    <aura:attribute name="allRecords" type="Object[]"/>    
+
+    <aura:attribute name="inputText" type="String" description="typed input" access="private" />        
+    
+    <!-- records matching typeahead text -->
+    <aura:attribute name="matchedRecords" type="Object[]" access="private"/>    
+
+    <aura:attribute name="recordChosen" type="Boolean" access="private"/>  
+
+    
+    <!-- external libraries -->
+    <ltng:require styles="/resource/SLDS104/assets/styles/salesforce-lightning-design-system-ltng.min.css"/>   
+
+    <!-- events -->
+    <!-- fire EvtChildComponentError event when errors happen so parent can display error -->
+    <aura:registerEvent name="EvtChildComponentError" type="c:EvtChildComponentError"/>
+    <aura:handler name="EvtPolymorphLookupTypeSelect" event="c:EvtPolymorphLookupTypeSelect" 
+                  action="{!c.selectMenuType}" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="EvtLookupInputSelect" event="c:EvtLookupInputSelect" action="{!c.setChosenRecord}"/>
+    <aura:handler name="change" value="{!v.allRecords}" action="{!c.removeChosen}" />
+    
+    <aura:if isTrue="{!!v.selectedName}">
+        <div class="slds-form-element slds-lookup" data-select="multi" data-scope="multi">
+            <aura:if isTrue="{!v.lookupLabel}" >
+                <label class="slds-form-element__label" for="{!globalId + '_searchInput'}">{!v.lookupLabel}</label>
+            </aura:if>
+            <div class="slds-form-element__control slds-grid slds-box--border">
+
+                <c:CmpPolymorphLookupTypes items="{!v.items}" 
+                                           showIconOnly="{!v.showIconOnly}"
+                                           itemsPopulated="{!v.itemsPopulated}"
+                                           selectedMenuType="{!v.selectedMenuType}"
+                                           selectedMenuIconType="{!v.selectedMenuIconType}"
+                                           selectedMenuIconName="{!v.selectedMenuIconName}"/>
+
+                <div class="slds-input-has-icon slds-input-has-icon--right slds-grid slds-grow">
+                    <span class="slds-icon_container slds-icon-utility-search" title="Search">
+                        <c:svgIcon svgPath="/resource/SLDS104/assets/icons/utility-sprite/svg/symbols.svg#search" 
+                                   class="slds-input__icon"/>  
+                        <span class="slds-assistive-text">Search</span>
+                    </span>
+                    <input id="{!globalId + '_searchInput'}" class="slds-lookup__search-input slds-input--bare slds-grow" type="text" 
+                            aria-autocomplete="list" role="combobox" aria-expanded="true" aria-activedescendant="" 
+                            placeholder="--Search--" oninput="{!c.doSearch}"/>
+                </div>
+
+                <aura:renderIf isTrue="{!v.matchedRecords.length == 0 ? false : true}">   
+                  <div class="slds-lookup__menu" role="listbox">
+                    <div>
+                      <a href="#" 
+                         class="slds-lookup__item-action slds-lookup__item-action--label">
+                        <span class="slds-icon_container slds-icon-utility-search slds-m-left--small" title="Search">
+                            <c:svgIcon svgPath="/resource/SLDS104/assets/icons/utility-sprite/svg/symbols.svg#search" 
+                                       class="slds-icon--x-small slds-m-right--small slds-icon-text-default"/>  
+                            <span class="slds-assistive-text">Search</span>
+                        </span>
+                        <span class="slds-truncate">&quot;{!v.inputText}&quot; in {!v.selectedMenuType}</span>
+                      </a>
+                    </div>
+                    <ul class="dropdown__list" role="menu">
+                        <aura:iteration var="record" items="{!v.matchedRecords}">
+                            <c:CmpLookupInputRecord record="{!record}"/>
+                        </aura:iteration>
+                    </ul>                
+                  </div>
+                </aura:renderIf>
+
+            </div>
+        </div>	
+    </aura:if>
+        
+    <aura:if isTrue="{!v.selectedName}">
+        <aura:if isTrue="{!v.lookupLabel}" >
+            <label class="slds-form-element__label" for="{!globalId + '_searchInput'}">&nbsp;</label>
+        </aura:if>
+        <div class="slds-form-element slds-lookup slds-has-selection" data-select="single" 
+             data-scope="single">
+            <div class="slds-form-element__control">
+                <div class="slds-pill_container">
+                    <span class="slds-pill">
+                        <span class="{!'slds-icon_container slds-icon-' + 
+                                        v.selectedMenuIconType + '-' + 
+                                        v.selectedMenuIconName}"
+                              title="{!v.selectedMenuType}">
+                            <c:svgIcon svgPath="{!'/resource/SLDS104/assets/icons/' +
+                                                v.selectedMenuIconType + '-sprite/svg/symbols.svg#' + 
+                                                v.selectedMenuIconName}" 
+                                       class="slds-icon--small"/>  
+                        </span>
+                        <span class="slds-pill__label">&nbsp;{!v.selectedName}</span>
+                        <button class="slds-button slds-button--icon slds-pill__remove" onclick="{!c.removeChosen}">
+                            <span class="slds-icon_container slds-icon-utility-close" title="Remove">
+                                <c:svgIcon svgPath="/resource/SLDS104/assets/icons/utility-sprite/svg/symbols.svg#close" 
+                                           class="slds-button__icon"/>  
+                                <span class="slds-assistive-text">Remove</span>
+                            </span>
+                            <span class="slds-assistive-text">Remove</span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    
+    
+    <div class="slds-hide">
+        {!v.body}
+    </div>
+    
+</aura:component>
