@@ -2,4 +2,9 @@
 Salesfore Lightning Customizable Polymorphic Lookup Component
 
 Refer to this blog for details on usage:
-https://vheragu.wordpress.com/2016/08/12/customizable-polymorphic-lookup-component/
+
+To Install this code in your salesforce org, click here:
+<a href="https://githubsfdeploy.herokuapp.com">
+  <img alt="Deploy to Salesforce"
+       src="https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/deploy.png">
+</a>
